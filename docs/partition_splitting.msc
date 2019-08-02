@@ -1,0 +1,90 @@
+msc{
+  hscale="1.55", wordwraparcs=on;
+
+  C [label="Client"],
+  Vs [label="Virtual Node (source)", linecolor="red", arclinecolor="red"],
+  Ps [label="Partition (source)", linecolor="red", arclinecolor="red"],
+  Pn [label="Partition (new)", linecolor="blue", arclinecolor="blue"],
+  Vn [label="Virtual Node (new)", linecolor="blue", arclinecolor="blue"],
+  Membership;
+
+  Membership => Pn [label="start partition w/ ranges to steal"];
+  Ps box Ps [label=":running", textbgcolour="lightgreen"],
+  Vs box Vs [label=":running", textbgcolour="lightgreen"],
+  Pn box Pn [label=":stealing", textbgcolour="greenyellow"],
+  Vn box Vn [label=":running", textbgcolour="lightgreen"];
+
+  |||;
+  
+  C alt Vn [label="range available @ source", linecolor="red"] {
+    C -> Vs [label="user call"];
+    Vs -> Ps [label="user command"];
+    Vs <- Ps [label="{:ok, response}"];
+    C <- Vs [label="{:ok, response}"];
+
+  
+    Pn -> Pn [label=":steal_next_range"];
+    Pn box Pn [label="{:stealing, %RangeSteal{}}", textbgcolour="greenyellow"];
+
+    Pn -> Ps [label="{:release_range, %RangeRelease{}}"];
+  };
+  
+  C alt Vn [label="range unavailable", linecolor="red"] {
+    Ps => Ps [label="module.release_range/2"];
+    Ps rbox Ps [label="move range from active_range to released_ranges"];
+    Ps box Ps [label="{:releasing, %RangeRelease{}}", textbgcolour="greenyellow"];
+
+    Ps -> Pn [label=":ok"];
+
+    |||;
+
+    Vs -> Ps [label="user command to releasing range"];
+    Vs <- Ps [label="{:error, :releasing}"];
+    
+    |||;
+
+    Ps note Ps [label="New partition's nodes are contained in RangeRelease."];
+    Ps -> Pn [label="{:accept_range, %RangeAccept{}} @ Pn_nodes"];
+    Pn rbox Pn [label="add range to active_range"];
+    Pn -> Vn [label="{:update_ranges, ranges}"];
+    Pn box Pn [label=":stealing", textbgcolour="greenyellow"];
+    Pn -> Ps [label=":ok"];
+    Ps box Ps [label=":running w/ released ranges", textbgcolour="lightgreen"];
+    |||;
+    Ps -> Ps [label="{:range_accepted, range}"];
+
+   	Ps -> Vs [label="{:release_range, range, ranges}"];
+    Vs => Vs [label="module.release_range/2"];
+    
+    Vs box Vs [label=":running w/ released ranges", textbgcolour="lightgreen"];
+  };
+  
+  C alt Vn [label="range available @ new + fwds from source", linecolor="red"] {
+    C -> Vs [label="call to releasing range"];
+    C <- Vs [label="{:forward, Vn, Vn_nodes}"];
+    C -> Vn [label="call @ Vn_nodes"];
+    Vn -> Pn [label="user command"];
+    Vn <- Pn [label="{:ok, response}"];
+    C <- Vn [label="{:ok, response}"];
+
+    Vs -> Ps [label="user command"];
+    Vs <- Ps [label="{:forward, Pn, Pn_nodes}"];
+    Vs -> Pn [label="user command @ Pn_nodes"];
+    Vs <- Pn [label="{:ok, response}"];
+  };
+
+  --- [label="repeat range theft from other partitions"];
+  ...;
+
+  Pn -> Pn [label=":steal_next_range"];
+  Pn -> Membership [label="{:transition, {:continue, conf_msg}}"];
+  Ps <- Membership [label="{:transition_finished, cluster_state}"];
+  Ps box Ps [label=":running", textbgcolour="lightgreen"];
+  Vs <- Ps [label="{:transition_finished, cluster_state}"];
+  Vs box Vs [label=":running", textbgcolour="lightgreen"];
+
+  Pn <- Membership [label="{:transition_finished, cluster_state}"];
+  Pn box Pn [label=":running", textbgcolour="lightgreen"];
+  Vn <- Pn [label="{:transition_finished, cluster_state}"];
+  Vn box Vn [label=":running", textbgcolour="lightgreen"];
+}

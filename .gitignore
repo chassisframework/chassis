@@ -1,0 +1,12 @@
+/_build/
+/cover/
+/deps/
+/doc/
+/.fetch
+erl_crash.dump
+*.ez
+Chassis-*.tar
+tmp
+.DS_Store
+.elixir_ls
+.#*

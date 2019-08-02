@@ -1,0 +1,10 @@
+%{
+  "aten": {:hex, :aten, "0.5.3", "c23747fb01c6a1248b2624ee2eaad7b57acaf2b5451b14df4acdf26cecdd91a7", [:rebar3], [], "hexpm", "0a08c4ac94ee4f3bee530d50f5dd8f2bead027a353b6afa4ce8e3e9eff78c8dd"},
+  "bin_packer": {:hex, :bin_packer, "0.1.0", "63faef5fd53ab3ef507a18503a20d64cb6b5e8cfd8b0e82dbe2273276a7b7664", [:mix], [], "hexpm", "66856fcdac0bb2f61931cfc7e2fc79d79a4aecc342719d46c093ab396eac9ee3"},
+  "delta_crdt": {:hex, :delta_crdt, "0.5.10", "e866f8d1b89bee497a98b9793e9ba0ea514112a1c41a0c30dcde3463d4984d14", [:mix], [{:merkle_map, "~> 0.2.0", [hex: :merkle_map, repo: "hexpm", optional: false]}, {:telemetry, "~> 0.4.0", [hex: :telemetry, repo: "hexpm", optional: false]}], "hexpm", "ed5c685df9528788d7c056762c23f75358f3cadd4779698188a55ccae24d087a"},
+  "gen_batch_server": {:hex, :gen_batch_server, "0.8.2", "547f5656937ab36f1fb7921263f2f3e82d685ae99f32bce06b803719aae5d829", [:rebar3], [], "hexpm", "95d36ad1521205d727abbe89e5473af839241527d560652cde861a92b01928e7"},
+  "merkle_map": {:hex, :merkle_map, "0.2.1", "01a88c87a6b9fb594c67c17ebaf047ee55ffa34e74297aa583ed87148006c4c8", [:mix], [], "hexpm", "fed4d143a5c8166eee4fa2b49564f3c4eace9cb252f0a82c1613bba905b2d04d"},
+  "partition_map": {:hex, :partition_map, "0.1.0", "40b045c4f85b0caba0b094c65fab1f5143086d2f24dae70f63c7e4d376a21294", [:mix], [{:interval_map, "~> 0.1.0", [hex: :interval_map, repo: "hexpm", optional: false]}], "hexpm", "c590ec9701418673b7a22463171b5c3158db55ef36bfd56354635a65230c72d6"},
+  "ra": {:git, "https://github.com/rabbitmq/ra.git", "0f126cf7b1420fc68d093fc27e454e5f5678e016", []},
+  "telemetry": {:hex, :telemetry, "0.4.2", "2808c992455e08d6177322f14d3bdb6b625fbcfd233a73505870d8738a2f4599", [:rebar3], [], "hexpm", "2d1419bd9dda6a206d7b5852179511722e2b18812310d304620c7bd92a13fcef"},
+}
